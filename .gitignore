@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environnements virtuels
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Variables d'environnement
+.env
+.env.local
+.env.*.local
+
+# AWS SAM / CDK
+.aws-sam/
+cdk.out/
+samconfig.toml
+packaged-template.yaml
+
+# Packages Lambda (artefacts de déploiement)
+*.zip
+lambda-package/
+deployment-package/
+
+# Credentials AWS (ne jamais committer)
+.aws/
+credentials
+aws-credentials.json
+
+# Rapport PDF (livrable soumis séparément)
+rapport.pdf
+*.pdf
+
+# Captures d'écran
+screenshots/
+*.png
+*.jpg
+*.jpeg
+
+# IDE - VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# IDE - JetBrains / PyCharm
+.idea/
+*.iml
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*.swp
+*~
