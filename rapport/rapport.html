@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rapport – Pipeline IoT AWS – GBOSSOU Folly S. Carlo</title>
+  <style>
+    @media print {
+      .no-print { display: none; }
+      .page-break { page-break-before: always; }
+      body { font-size: 11pt; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #1a202c;
+      line-height: 1.8;
+      background: #fff;
+    }
+
+    /* ── PAGE DE GARDE ── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(160deg, #1a365d, #2b6cb0);
+      color: white;
+      padding: 60px 40px;
+    }
+    .cover .logo { font-size: 3rem; margin-bottom: 24px; }
+    .cover h1 { font-size: 1.9rem; margin-bottom: 12px; max-width: 700px; }
+    .cover h2 { font-size: 1.2rem; font-weight: 400; opacity: 0.85; margin-bottom: 40px; }
+    .cover-meta { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 24px 40px; }
+    .cover-meta p { margin: 6px 0; font-size: 0.95rem; }
+    .cover-meta strong { font-weight: 600; }
+
+    /* ── CONTENU ── */
+    .content { max-width: 860px; margin: 0 auto; padding: 48px 40px 80px; }
+
+    h1.section-title {
+      font-size: 1.6rem;
+      color: #1a365d;
+      border-bottom: 3px solid #2b6cb0;
+      padding-bottom: 10px;
+      margin: 48px 0 24px;
+    }
+
+    h2.sub-title {
+      font-size: 1.15rem;
+      color: #2b6cb0;
+      margin: 28px 0 12px;
+    }
+
+    h3.sub-sub {
+      font-size: 1rem;
+      color: #2d3748;
+      margin: 20px 0 8px;
+      font-weight: 600;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── TABLE DES MATIÈRES ── */
+    .toc { background: #f7fafc; border-left: 4px solid #2b6cb0; padding: 24px 32px; border-radius: 4px; margin: 24px 0; }
+    .toc h2 { color: #1a365d; margin-bottom: 16px; }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin: 6px 0; }
+
+    /* ── CODE ── */
+    code {
+      background: #edf2f7;
+      color: #c53030;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.88em;
+      font-family: 'Courier New', monospace;
+    }
+    .code-block {
+      background: #1a202c;
+      color: #e2e8f0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      padding: 20px 24px;
+      border-radius: 6px;
+      margin: 14px 0;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.6;
+    }
+
+    /* ── ARCHITECTURE ── */
+    .arch {
+      background: #1a202c;
+      color: #68d391;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      padding: 24px;
+      border-radius: 6px;
+      line-height: 1.9;
+      margin: 16px 0;
+    }
+
+    /* ── TABLEAUX ── */
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem; }
+    th { background: #ebf4ff; color: #1a365d; padding: 10px 14px; text-align: left; border-bottom: 2px solid #bee3f8; }
+    td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── CAPTURES ── */
+    figure {
+      margin: 16px 0;
+      text-align: center;
+    }
+    figure img {
+      max-width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    }
+    figcaption {
+      font-size: 0.8rem;
+      color: #718096;
+      margin-top: 8px;
+    }
+    figcaption strong {
+      color: #2b6cb0;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 4px solid #48bb78;
+      background: #f0fff4;
+      padding: 14px 20px;
+      border-radius: 4px;
+      margin: 16px 0;
+      font-size: 0.92rem;
+    }
+    .callout.warning { border-color: #ed8936; background: #fffaf0; }
+
+    /* ── QUESTIONS ── */
+    .question {
+      background: #ebf4ff;
+      border-left: 4px solid #2b6cb0;
+      padding: 16px 20px;
+      border-radius: 4px;
+      margin: 28px 0 12px;
+      font-style: italic;
+      color: #1a365d;
+    }
+    .answer { padding: 0 4px; }
+
+    /* ── PRINT HINT ── */
+    .print-hint {
+      background: #fefcbf;
+      border: 1px solid #f6e05e;
+      padding: 12px 20px;
+      border-radius: 6px;
+      margin-bottom: 32px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE DE GARDE
+════════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="logo">☁️</div>
+  <h1>Pipeline d'Ingestion de Données IoT<br>en Temps Réel (Serverless)</h1>
+  <h2>Rapport de Projet – Examen Final</h2>
+  <div class="cover-meta">
+    <p><strong>Cours :</strong> Introduction à AWS</p>
+    <p><strong>Responsable :</strong> M. Mofiala Hervé LOKOSSOU</p>
+    <p style="margin-top:16px"><strong>Étudiant :</strong> GBOSSOU Folly S. Carlo</p>
+    <p><strong>Identifiant :</strong> fgbossou</p>
+    <p><strong>Région AWS :</strong> eu-west-3 (Paris)</p>
+    <p><strong>Date :</strong> Juin 2026</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CONTENU
+════════════════════════════════════════════════════════════ -->
+<div class="content">
+
+  <div class="print-hint no-print">
+    💡 <strong>Pour générer le PDF :</strong> Fichier → Imprimer → Enregistrer en PDF.
+    Désactiver les en-têtes/pieds de page pour un rendu propre.
+  </div>
+
+  <!-- TABLE DES MATIÈRES -->
+  <div class="toc">
+    <h2>Table des Matières</h2>
+    <ol>
+      <li>Introduction et contexte</li>
+      <li>Architecture de la solution</li>
+      <li>Déploiement de l'infrastructure (SAM / CloudFormation)</li>
+      <li>Code de traitement Lambda</li>
+      <li>Script client de test</li>
+      <li>Documentation technique (S3 + CloudFront)</li>
+      <li>Validation fonctionnelle</li>
+      <li>Réponses aux questions théoriques</li>
+      <li>Conclusion</li>
+    </ol>
+  </div>
+
+  <!-- ══ 1. INTRODUCTION ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">1. Introduction et Contexte</h1>
+
+  <p>
+    Ce rapport présente la conception et le déploiement d'un pipeline serverless
+    d'ingestion de données IoT en temps réel sur Amazon Web Services, réalisé dans
+    le cadre du cours <strong>Introduction à AWS</strong>.
+  </p>
+  <p>
+    Le contexte applicatif est celui d'une entreprise industrielle déployant des
+    milliers de capteurs IoT. L'objectif est de mettre en place une architecture
+    hautement disponible, capable de capter les flux de données envoyés par requêtes
+    HTTP POST, de les stocker dans un Data Lake brut sur S3, et d'alimenter un Feature
+    Store analytique sur DynamoDB.
+  </p>
+  <p>
+    En parallèle, une documentation technique est hébergée dans un bucket S3 privé,
+    rendu accessible de manière sécurisée via Amazon CloudFront avec le mécanisme
+    <strong>OAC (Origin Access Control)</strong>.
+  </p>
+  <p>
+    L'intégralité de l'infrastructure est automatisée avec
+    <strong>AWS SAM (Serverless Application Model)</strong> et déployée via
+    une seule commande <code>sam deploy</code>, sans aucune action manuelle dans la console.
+  </p>
+
+  <!-- ══ 2. ARCHITECTURE ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">2. Architecture de la Solution</h1>
+
+  <p>La solution repose sur deux sous-systèmes indépendants décrits ci-dessous.</p>
+
+  <h2 class="sub-title">2.1 Sous-système 1 — Pipeline d'Ingestion IoT</h2>
+  <div class="arch">
+Client IoT / test_client.py
+       │  HTTP POST /
+       ▼
+Amazon CloudFront (Distribution Ingestion)
+  CachePolicyId : CachingDisabled
+  OriginRequestPolicy : AllViewerExceptHostHeader
+       │  HTTPS
+       ▼
+Amazon API Gateway HTTP API  ─  Route : POST /
+       │  Intégration AWS_PROXY (PayloadFormatVersion 2.0)
+       ▼
+AWS Lambda  –  Python 3.11  –  handler : index.handler
+       ├──▶  Amazon S3 Data Lake
+       │      raw-zone/year=YYYY/month=MM/day=DD/{request_id}.json
+       └──▶  Amazon DynamoDB  –  Table : fgbossou-iot-pipeline-iot-metrics
+              request_id | timestamp | s3_path | average_temperature | error_count</div>
+
+  <h2 class="sub-title">2.2 Sous-système 2 — Documentation Technique</h2>
+  <div class="arch">
+Navigateur
+       │  HTTPS
+       ▼
+Amazon CloudFront (Distribution Documentation)
+  CachePolicyId : CachingOptimized
+  OAC : SigningProtocol sigv4 / SigningBehavior always
+       │  Requête signée SigV4
+       ▼
+Amazon S3 (Bucket privé – Block Public Access : ON)
+       └── index.html</div>
+
+  <h2 class="sub-title">2.3 Ressources déployées</h2>
+  <table>
+    <thead><tr><th>#</th><th>Ressource SAM / CloudFormation</th><th>Rôle</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><code>AWS::S3::Bucket</code> – DataLakeBucket</td><td>Stockage brut des payloads IoT</td></tr>
+      <tr><td>2</td><td><code>AWS::DynamoDB::Table</code> – IoTMetricsTable</td><td>Feature Store des métriques agrégées</td></tr>
+      <tr><td>3</td><td><code>AWS::IAM::Role</code> – LambdaExecutionRole</td><td>Permissions minimales Lambda</td></tr>
+      <tr><td>4</td><td><code>AWS::Serverless::HttpApi</code> – HttpApi</td><td>API HTTP exposant POST /</td></tr>
+      <tr><td>5</td><td><code>AWS::Serverless::Function</code> – IoTIngestionFunction</td><td>Traitement Python 3.11</td></tr>
+      <tr><td>6</td><td><code>AWS::CloudFront::Distribution</code> – CloudFrontIngestion</td><td>CDN devant API Gateway</td></tr>
+      <tr><td>7</td><td><code>AWS::S3::Bucket</code> – DocBucket</td><td>Hébergement documentation (privé)</td></tr>
+      <tr><td>8</td><td><code>AWS::CloudFront::OriginAccessControl</code> – DocumentationOAC</td><td>Contrôle d'accès SigV4 S3</td></tr>
+      <tr><td>9</td><td><code>AWS::CloudFront::Distribution</code> – CloudFrontDoc</td><td>CDN sécurisé documentation</td></tr>
+      <tr><td>10</td><td><code>AWS::S3::BucketPolicy</code> – DocBucketPolicy</td><td>Restreint accès S3 à CloudFront</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ══ 3. DÉPLOIEMENT ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">3. Déploiement de l'Infrastructure</h1>
+
+  <h2 class="sub-title">3.1 Commande de déploiement</h2>
+  <p>
+    L'infrastructure complète est déployée via une seule commande SAM.
+    La stack <strong>fgbossou-iot-stack</strong> crée automatiquement les 10 ressources
+    et expose les URLs dans l'onglet Outputs de CloudFormation.
+  </p>
+  <div class="code-block">sam deploy \
+  --template-file infrastructure/template.yaml \
+  --stack-name fgbossou-iot-stack \
+  --capabilities CAPABILITY_NAMED_IAM \
+  --resolve-s3 \
+  --region eu-west-3</div>
+
+  <h2 class="sub-title">3.2 Résultat — Stack CREATE_COMPLETE</h2>
+  <figure>
+    <img src="01-cloudformation-stack-create-complete.png" alt="CloudFormation Stack CREATE_COMPLETE" />
+    <figcaption><strong>Capture 1</strong> — CloudFormation → fgbossou-iot-stack → Statut CREATE_COMPLETE</figcaption>
+  </figure>
+
+  <h2 class="sub-title">3.3 Outputs CloudFormation</h2>
+  <figure>
+    <img src="02-cloudformation-outputs.png" alt="CloudFormation Outputs" />
+    <figcaption><strong>Capture 2</strong> — CloudFormation → Onglet Outputs (CloudFrontIngestionURL, CloudFrontDocURL, S3BucketName, DynamoDBTableName)</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th>Output</th><th>Valeur</th></tr></thead>
+    <tbody>
+      <tr><td>CloudFrontIngestionURL</td><td>https://dgggjjmfk7k84.cloudfront.net</td></tr>
+      <tr><td>CloudFrontDocURL</td><td>https://d3l8f210waz845.cloudfront.net</td></tr>
+      <tr><td>S3BucketName</td><td>629193321657-fgbossou-iot-pipeline-data-lake</td></tr>
+      <tr><td>DynamoDBTableName</td><td>fgbossou-iot-pipeline-iot-metrics</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ══ 4. CODE LAMBDA ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">4. Code de Traitement Lambda (index.py)</h1>
+
+  <p>
+    La fonction Lambda Python 3.11 reçoit les événements HTTP depuis API Gateway,
+    valide le payload, calcule les métriques, persiste les données dans S3 et DynamoDB,
+    et retourne une réponse HTTP structurée.
+  </p>
+
+  <h2 class="sub-title">4.1 Logique de traitement</h2>
+  <table>
+    <thead><tr><th>Étape</th><th>Action</th><th>Réponse en cas d'échec</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Extraction du body HTTP</td><td>HTTP 400 – Missing request body</td></tr>
+      <tr><td>2</td><td>Parsing JSON</td><td>HTTP 400 – Invalid JSON</td></tr>
+      <tr><td>3</td><td>Validation champs measurements</td><td>HTTP 400 – Missing field</td></tr>
+      <tr><td>4</td><td>Génération <code>request_id</code> (uuid4)</td><td>–</td></tr>
+      <tr><td>5</td><td>Calcul <code>average_temperature</code> et <code>error_count</code></td><td>–</td></tr>
+      <tr><td>6</td><td>Écriture S3 (partitionnement temporel)</td><td>HTTP 500 – exception AWS</td></tr>
+      <tr><td>7</td><td>Écriture DynamoDB</td><td>HTTP 500 – exception AWS</td></tr>
+      <tr><td>8</td><td>Retour HTTP 201</td><td>–</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub-title">4.2 Partitionnement S3</h2>
+  <p>
+    Les données brutes sont stockées selon une stratégie de partitionnement temporel
+    compatible avec les outils analytiques (AWS Glue, Athena) :
+  </p>
+  <div class="code-block">raw-zone/year=2026/month=06/day=10/{request_id}.json</div>
+
+  <h2 class="sub-title">4.3 Captures des ressources créées</h2>
+  <figure>
+    <img src="07-apigateway-routes.png" alt="API Gateway Routes" />
+    <figcaption><strong>Capture 3</strong> — API Gateway → fgbossou-iot-pipeline-http-api → Route POST /</figcaption>
+  </figure>
+  <figure>
+    <img src="06a-lambda-function-overview.png" alt="Lambda Function Overview" />
+    <figcaption><strong>Capture 4</strong> — Lambda → fgbossou-iot-pipeline-ingestion → Vue générale (Runtime Python 3.11)</figcaption>
+  </figure>
+  <figure>
+    <img src="06b-lambda-env-vars.png" alt="Lambda Environment Variables" />
+    <figcaption><strong>Capture 5</strong> — Lambda → Configuration → Variables d'environnement (S3_BUCKET, DYNAMODB_TABLE)</figcaption>
+  </figure>
+  <figure>
+    <img src="10-iam-lambda-role.png" alt="IAM Lambda Role" />
+    <figcaption><strong>Capture 6</strong> — IAM → fgbossou-iot-pipeline-lambda-execution-role → Permissions policies</figcaption>
+  </figure>
+
+  <!-- ══ 5. SCRIPT CLIENT ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">5. Script Client de Test (test_client.py)</h1>
+
+  <p>
+    Le script <code>test_client.py</code> utilise la bibliothèque <code>requests</code>
+    pour envoyer des requêtes HTTP POST vers l'URL CloudFront d'ingestion.
+    Il couvre trois scénarios : payload valide, champ manquant, et JSON malformé.
+  </p>
+
+  <h2 class="sub-title">5.1 Payload de test (4 mesures)</h2>
+  <div class="code-block">{
+  "measurements": [
+    {"sensor_id": "sensor-1", "temperature": 22.5, "status": "OK"},
+    {"sensor_id": "sensor-2", "temperature": 37.8, "status": "ERROR"},
+    {"sensor_id": "sensor-3", "temperature": 19.1, "status": "OK"},
+    {"sensor_id": "sensor-4", "temperature": 45.0, "status": "ERROR"}
+  ]
+}</div>
+
+  <h2 class="sub-title">5.2 Résultats d'exécution</h2>
+  <table>
+    <thead><tr><th>Test</th><th>Scénario</th><th>HTTP attendu</th><th>HTTP obtenu</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Payload valide (4 mesures)</td><td>201</td><td>✅ 201</td></tr>
+      <tr><td>2</td><td>Champ temperature manquant</td><td>400</td><td>✅ 400</td></tr>
+      <tr><td>3</td><td>JSON malformé</td><td>400</td><td>✅ 400</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub-title">5.3 Réponse Test 1 (succès)</h2>
+  <div class="code-block">{
+  "message": "Data ingested successfully",
+  "request_id": "780de881-af11-4bf7-972c-befbc453ed2c",
+  "s3_path": "s3://629193321657-fgbossou-iot-pipeline-data-lake/raw-zone/year=2026/month=06/day=10/780de881-af11-4bf7-972c-befbc453ed2c.json",
+  "average_temperature": 31.1,
+  "error_count": 2
+}</div>
+
+  <!-- ══ 6. DOCUMENTATION ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">6. Documentation Technique (S3 + CloudFront)</h1>
+
+  <h2 class="sub-title">6.1 Upload du fichier index.html</h2>
+  <p>
+    La documentation technique est déployée dans le bucket S3 privé via la commande
+    AWS CLI suivante :
+  </p>
+  <div class="code-block">aws s3 cp index.html \
+  s3://629193321657-fgbossou-iot-pipeline-tech-doc/index.html \
+  --region eu-west-3</div>
+
+  <h2 class="sub-title">6.2 Validation du blocage d'accès direct S3</h2>
+  <p>
+    Toute tentative d'accès direct à l'URL S3 du fichier retourne une erreur
+    <strong>Access Denied (403)</strong>, confirmant que le bucket est correctement
+    isolé du public.
+  </p>
+  <figure>
+    <img src="13-s3-direct-access-denied.png" alt="S3 Direct Access Denied" />
+    <figcaption><strong>Capture 7</strong> — Accès direct S3 → 403 Access Denied</figcaption>
+  </figure>
+
+  <h2 class="sub-title">6.3 Accès sécurisé via CloudFront (OAC)</h2>
+  <p>
+    La même page est accessible via l'URL CloudFront grâce au mécanisme OAC
+    qui signe les requêtes en SigV4 :
+    <strong>https://d3l8f210waz845.cloudfront.net</strong>
+  </p>
+  <figure>
+    <img src="14-cloudfront-doc-access-ok.png" alt="CloudFront Documentation Access" />
+    <figcaption><strong>Capture 8</strong> — Documentation accessible via CloudFront URL</figcaption>
+  </figure>
+  <figure>
+    <img src="08-cloudfront-distributions-list.png" alt="CloudFront Distributions List" />
+    <figcaption><strong>Capture 9</strong> — CloudFront → Liste des deux distributions (Enabled / Deployed)</figcaption>
+  </figure>
+  <figure>
+    <img src="09-cloudfront-doc-origin-oac.png" alt="CloudFront Doc Origin OAC" />
+    <figcaption><strong>Capture 10</strong> — CloudFront Distribution Doc → Origins → OAC configuré</figcaption>
+  </figure>
+
+  <!-- ══ 7. VALIDATION ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">7. Validation Fonctionnelle</h1>
+
+  <h2 class="sub-title">7.1 Ressources S3 et DynamoDB créées</h2>
+  <figure>
+    <img src="03-s3-buckets-list.png" alt="S3 Buckets List" />
+    <figcaption><strong>Capture 11</strong> — S3 → Liste des deux buckets data-lake et tech-doc</figcaption>
+  </figure>
+  <figure>
+    <img src="04-s3-tech-doc-block-public-access.png" alt="S3 Tech Doc Block Public Access" />
+    <figcaption><strong>Capture 12</strong> — S3 → tech-doc → Permissions → Block Public Access (tout activé)</figcaption>
+  </figure>
+  <figure>
+    <img src="11-s3-raw-data-file.png" alt="S3 Raw Data File" />
+    <figcaption><strong>Capture 13</strong> — S3 → data-lake → raw-zone/year=2026/month=06/day=10/ → fichier JSON créé</figcaption>
+  </figure>
+  <figure>
+    <img src="05-dynamodb-table.png" alt="DynamoDB Table" />
+    <figcaption><strong>Capture 14</strong> — DynamoDB → fgbossou-iot-pipeline-iot-metrics → Vue générale</figcaption>
+  </figure>
+  <figure>
+    <img src="12-dynamodb-item.png" alt="DynamoDB Item" />
+    <figcaption><strong>Capture 15</strong> — DynamoDB → Éléments → request_id, avg_temp=31.1, error_count=2</figcaption>
+  </figure>
+
+  <h2 class="sub-title">7.2 Logs CloudWatch — Exécution en succès</h2>
+  <figure>
+    <img src="15-cloudwatch-success.png" alt="CloudWatch Success Log" />
+    <figcaption><strong>Capture 16</strong> — CloudWatch → /aws/lambda/fgbossou-iot-pipeline-ingestion → Log stream succès</figcaption>
+  </figure>
+
+  <h2 class="sub-title">7.3 Logs CloudWatch — Exécution en erreur</h2>
+  <figure>
+    <img src="16-cloudwatch-error.png" alt="CloudWatch Error Log" />
+    <figcaption><strong>Capture 17</strong> — CloudWatch → Log stream erreur → message d'erreur visible</figcaption>
+  </figure>
+
+  <!-- ══ 8. QUESTIONS THÉORIQUES ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">8. Réponses aux Questions Théoriques</h1>
+
+  <!-- Q1 -->
+  <div class="question">
+    Question 1 — Expliquez le concept d'Infrastructure as Code (IaC) et décrivez
+    brièvement le rôle d'AWS CloudFormation dans la gestion d'un cycle de vie applicatif.
+  </div>
+  <div class="answer">
+    <p>
+      L'Infrastructure as Code (IaC) est une pratique qui consiste à décrire et
+      provisionner l'infrastructure informatique via des fichiers de configuration
+      versionnés, au lieu d'actions manuelles dans une console. L'infrastructure
+      devient reproductible, auditable et intégrable dans un pipeline CI/CD.
+    </p>
+    <p>
+      AWS CloudFormation est le service IaC natif d'AWS. Il interprète un template
+      YAML ou JSON décrivant les ressources souhaitées et orchestre leur création,
+      mise à jour ou suppression en tant qu'unité cohérente appelée <strong>stack</strong>.
+      Tout au long du cycle de vie applicatif, CloudFormation garantit la cohérence
+      entre l'état décrit et l'état réel des ressources, et permet un rollback
+      automatique en cas d'échec de déploiement.
+    </p>
+    <p>
+      Dans ce projet, AWS SAM étend CloudFormation avec des abstractions serverless
+      (<code>AWS::Serverless::Function</code>, <code>AWS::Serverless::HttpApi</code>)
+      qui simplifient la déclaration tout en générant les ressources CloudFormation
+      sous-jacentes.
+    </p>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question">
+    Question 2 — Qu'est-ce qu'une fonction AWS Lambda ? En quoi son approche
+    "Serverless" se distingue-t-elle d'une architecture classique basée sur des
+    instances virtuelles Amazon EC2 ?
+  </div>
+  <div class="answer">
+    <p>
+      AWS Lambda est un service d'exécution de code à la demande. Le développeur
+      fournit uniquement le code (ici Python 3.11) et Lambda se charge de l'exécuter
+      en réponse à un événement, sans qu'aucun serveur ne soit à provisionner,
+      configurer ou maintenir.
+    </p>
+    <table>
+      <thead><tr><th>Critère</th><th>Lambda (Serverless)</th><th>EC2 (classique)</th></tr></thead>
+      <tbody>
+        <tr><td>Provisionnement</td><td>Automatique</td><td>Manuel</td></tr>
+        <tr><td>Facturation</td><td>Par invocation et durée d'exécution</td><td>À l'heure, serveur allumé ou non</td></tr>
+        <tr><td>Scalabilité</td><td>Automatique et instantanée</td><td>Manuelle ou via Auto Scaling</td></tr>
+        <tr><td>Maintenance OS</td><td>Gérée par AWS</td><td>À la charge du client</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Pour un pipeline IoT à charge variable, Lambda est nettement plus adapté
+      qu'EC2 : aucun coût à vide et mise à l'échelle transparente face aux pics
+      d'ingestion.
+    </p>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question">
+    Question 3 — Quel est l'intérêt architectural d'adosser une distribution Amazon
+    CloudFront devant un point d'entrée Amazon API Gateway pour une collecte globale
+    de données IoT ?
+  </div>
+  <div class="answer">
+    <p>Placer CloudFront devant API Gateway apporte quatre avantages majeurs :</p>
+    <ol style="padding-left:20px; margin-bottom:12px">
+      <li><strong>Réduction de la latence</strong> : CloudFront dispose de plus de 400 points de présence mondiaux. Les capteurs se connectent au PoP le plus proche, réduisant le temps de transit réseau.</li>
+      <li><strong>Absorption des pics</strong> : CloudFront agit comme bouclier, protégeant API Gateway des surcharges soudaines.</li>
+      <li><strong>Sécurité renforcée</strong> : Intégration native avec AWS WAF et AWS Shield pour filtrer les requêtes malveillantes avant qu'elles n'atteignent le backend.</li>
+      <li><strong>HTTPS unifié</strong> : CloudFront centralise la terminaison TLS avec un certificat géré, indépendamment de la région de déploiement de l'API.</li>
+    </ol>
+    <p>
+      Dans ce projet, la politique <code>CachingDisabled</code> est appliquée car
+      les requêtes POST IoT sont uniques et ne doivent jamais être mises en cache.
+    </p>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question">
+    Question 4 — Dans un écosystème Big Data, pourquoi choisit-on de stocker les
+    données brutes sur Amazon S3 (Data Lake) et les indicateurs agrégés sur Amazon
+    DynamoDB (Serving Layer) plutôt que de tout centraliser dans une unique base de
+    données relationnelle ?
+  </div>
+  <div class="answer">
+    <p>
+      Séparer les couches de stockage répond au principe de <strong>découplage par
+      usage</strong> :
+    </p>
+    <p>
+      <strong>Amazon S3 (Data Lake)</strong> est optimisé pour stocker des volumes
+      massifs de données brutes non structurées à faible coût. Il supporte des
+      pétaoctets, offre un partitionnement natif par préfixes de clés, et sert de
+      source pour des outils analytiques (Athena, Glue, EMR).
+    </p>
+    <p>
+      <strong>Amazon DynamoDB (Serving Layer)</strong> est optimisé pour des
+      lectures/écritures à faible latence sur des données structurées et agrégées.
+      Sa scalabilité horizontale automatique le rend idéal pour alimenter des
+      dashboards en temps réel.
+    </p>
+    <p>
+      Une base relationnelle unique ne peut pas remplir ces deux rôles simultanément :
+      elle est trop coûteuse à l'échelle pour le stockage brut, et ses mécanismes ACID
+      deviennent un goulot d'étranglement à haute volumétrie.
+    </p>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question">
+    Question 5 — Expliquez le principe du modèle de responsabilité partagée d'AWS
+    concernant la sécurité des données stockées dans Amazon S3.
+  </div>
+  <div class="answer">
+    <p>
+      Le modèle de responsabilité partagée définit une frontière claire entre ce
+      qu'AWS gère et ce que le client doit sécuriser.
+    </p>
+    <p>
+      <strong>AWS est responsable de</strong> la sécurité physique des datacenters,
+      de la durabilité de l'infrastructure de stockage (11 neuf de durabilité), et du
+      chiffrement de l'infrastructure sous-jacente.
+    </p>
+    <p>
+      <strong>Le client est responsable de</strong> la configuration des politiques
+      d'accès (Bucket Policy, IAM), de l'activation du chiffrement des objets
+      (SSE-S3, SSE-KMS), du blocage des accès publics, et de la conformité
+      réglementaire des données stockées.
+    </p>
+    <p>
+      Dans ce projet, le client applique ce modèle en activant
+      <code>BlockPublicAccess</code> sur les deux buckets et en restreignant les
+      accès via IAM (rôle Lambda) et OAC (CloudFront).
+    </p>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question">
+    Question 6 — Pourquoi est-il fortement déconseillé d'activer le "Static Website
+    Hosting" public sur un bucket S3 pour héberger une documentation interne ?
+    En quoi l'utilisation d'une distribution CloudFront combinée avec un OAC
+    améliore-t-elle la sécurité ?
+  </div>
+  <div class="answer">
+    <p>
+      Activer le Static Website Hosting public sur S3 expose le bucket directement
+      sur Internet via une URL S3 prévisible. Cela implique que tous les objets
+      doivent être publics, que la surface d'attaque est maximale, qu'aucun contrôle
+      d'accès fin n'est possible, et qu'aucun HTTPS natif n'est disponible sur
+      l'endpoint S3 website.
+    </p>
+    <p>
+      <strong>CloudFront + OAC</strong> résout ces problèmes : le bucket reste
+      entièrement privé (Block Public Access activé) et CloudFront est le seul
+      autorisé à lire le bucket, via une signature SigV4 vérifiée par S3 grâce à
+      une condition <code>AWS:SourceArn</code> sur l'ARN exact de la distribution.
+    </p>
+    <p>
+      La validation dans ce projet est concrète : l'accès direct S3 retourne
+      <strong>403 Access Denied</strong>, tandis que l'URL CloudFront
+      (<code>https://d3l8f210waz845.cloudfront.net</code>) affiche correctement
+      la documentation.
+    </p>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question">
+    Question 7 — Comment Amazon CloudWatch permet-il de superviser et de déboguer
+    le code d'une application serverless ? Que se passe-t-il au niveau des logs si
+    la fonction Lambda lève une exception non gérée ?
+  </div>
+  <div class="answer">
+    <p>
+      Amazon CloudWatch collecte automatiquement les logs de chaque invocation Lambda
+      dans un <strong>Log Group</strong> dédié
+      (<code>/aws/lambda/fgbossou-iot-pipeline-ingestion</code>). Chaque exécution
+      crée un <strong>Log Stream</strong> horodaté contenant les messages émis via
+      <code>logger.info()</code> / <code>logger.error()</code> et le rapport
+      d'exécution AWS (durée, mémoire consommée, statut).
+    </p>
+    <p>
+      <strong>En cas d'exception non gérée</strong>, Lambda intercepte automatiquement
+      l'erreur et écrit dans CloudWatch : le message d'exception, la
+      <strong>stack trace Python complète</strong> (fichier, numéro de ligne,
+      type d'erreur), et le statut <code>ERROR</code> dans le rapport d'exécution.
+    </p>
+    <p>
+      Dans ce projet, les tests avec payload corrompu ont généré exactement ces
+      traces, visibles dans les captures 15 et 16 ci-dessus.
+    </p>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question">
+    Question 8 — Imaginons qu'un fichier de données de 50 Go soit déposé d'un coup.
+    Pourquoi l'architecture AWS Lambda actuelle va-t-elle atteindre ses limites ?
+    Quel service managé d'AWS orienté Big Data devrions-nous utiliser ?
+  </div>
+  <div class="answer">
+    <p>AWS Lambda présente des limites physiques incompatibles avec un fichier de 50 Go :</p>
+    <table>
+      <thead><tr><th>Limite Lambda</th><th>Valeur</th></tr></thead>
+      <tbody>
+        <tr><td>Durée maximale d'exécution</td><td>15 minutes</td></tr>
+        <tr><td>Mémoire maximale</td><td>10 240 MB</td></tr>
+        <tr><td>Taille du payload entrant (synchrone)</td><td>6 MB</td></tr>
+        <tr><td>Stockage temporaire /tmp</td><td>10 GB</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Un fichier de 50 Go ne peut pas être chargé en mémoire Lambda, ne peut pas
+      être stocké dans <code>/tmp</code>, et son traitement dépasserait largement
+      les 15 minutes autorisées.
+    </p>
+    <p>
+      <strong>Service recommandé : AWS Glue.</strong> C'est le service ETL managé
+      d'AWS qui exécute des jobs Apache Spark serverless sur des données stockées
+      dans S3, sans infrastructure à gérer, et qui scale automatiquement sur des
+      téraoctets. Il s'intègrerait naturellement dans notre architecture en lisant
+      depuis le Data Lake S3 (<code>raw-zone/</code>) pour produire des agrégats
+      complexes dans DynamoDB ou Amazon Redshift.
+    </p>
+  </div>
+
+  <!-- ══ 9. CONCLUSION ══ -->
+  <div class="page-break"></div>
+  <h1 class="section-title">9. Conclusion</h1>
+
+  <p>
+    Ce projet démontre la faisabilité d'un pipeline d'ingestion IoT entièrement
+    serverless sur AWS, déployé via une seule commande SAM sans aucune action
+    manuelle.
+  </p>
+  <p>
+    L'architecture mise en place répond à toutes les exigences du cahier des charges :
+    collecte temps réel via CloudFront et API Gateway, traitement et validation des
+    données par Lambda Python 3.11, persistance dans un Data Lake S3 partitionné
+    et un Feature Store DynamoDB, et documentation technique sécurisée via CloudFront
+    OAC.
+  </p>
+  <p>
+    Les tests de bout en bout confirment le bon fonctionnement de chaque composant :
+    HTTP 201 pour les payloads valides, HTTP 400 avec messages explicites pour les
+    erreurs de validation, logs CloudWatch structurés pour le débogage, et blocage
+    effectif des accès directs S3.
+  </p>
+  <p>
+    Cette architecture, bien qu'orientée examen, est directement transposable en
+    production. Pour un passage à l'échelle industrielle, on envisagerait l'ajout
+    d'Amazon Kinesis Data Streams en amont de Lambda pour absorber les pics massifs,
+    et AWS Glue pour le traitement batch des gros volumes.
+  </p>
+
+  <div class="callout">
+    ✅ Stack <strong>fgbossou-iot-stack</strong> déployée en <strong>eu-west-3 (Paris)</strong>
+    — CREATE_COMPLETE — 10 ressources — Pipeline validé de bout en bout.
+  </div>
+
+</div>
+</body>
+</html>
