@@ -68,96 +68,100 @@ Captures :
 
 ---
 
-# Phase 3 - Développement Lambda
+# Phase 3 - Développement Lambda ✅
 
 Créer :
 
-* [ ] index.py
+* [x] index.py
 
 Fonctionnalités :
 
-* [ ] Lecture du body HTTP
-* [ ] Parsing JSON
-* [ ] Validation du payload
-* [ ] Génération request_id
-* [ ] Calcul température moyenne
-* [ ] Comptage des statuts ERROR
-* [ ] Sauvegarde S3
-* [ ] Partitionnement temporel
-* [ ] Écriture DynamoDB
-* [ ] Retour HTTP 201
+* [x] Lecture du body HTTP
+* [x] Parsing JSON
+* [x] Validation du payload
+* [x] Génération request_id
+* [x] Calcul température moyenne
+* [x] Comptage des statuts ERROR
+* [x] Sauvegarde S3
+* [x] Partitionnement temporel
+* [x] Écriture DynamoDB
+* [x] Retour HTTP 201
 
 Gestion des erreurs :
 
-* [ ] Payload invalide
-* [ ] JSON invalide
-* [ ] Champ manquant
-* [ ] Exception AWS
+* [x] Payload invalide
+* [x] JSON invalide
+* [x] Champ manquant
+* [x] Exception AWS
 
 Logging :
 
-* [ ] Logs CloudWatch structurés
+* [x] Logs CloudWatch structurés
 
 ---
 
-# Phase 4 - Script Client
+# Phase 4 - Script Client ✅
 
 Créer :
 
-* [ ] test_client.py
+* [x] test_client.py
 
 Fonctionnalités :
 
-* [ ] Utilisation de requests
-* [ ] Envoi POST
-* [ ] 4 mesures minimum
-* [ ] Affichage réponse HTTP
-* [ ] Affichage corps réponse
+* [x] Utilisation de requests
+* [x] Envoi POST
+* [x] 4 mesures minimum
+* [x] Affichage réponse HTTP
+* [x] Affichage corps réponse
 
 Validation :
 
-* [ ] HTTP 201
+* [x] HTTP 201
 
 ---
 
-# Phase 5 - Documentation Technique
+# Phase 5 - Documentation Technique ✅
 
 Créer :
 
-* [ ] index.html
+* [x] index.html
 
 Contenu :
 
-* [ ] Titre du cours
-* [ ] Description architecture
-* [ ] Description du pipeline
-* [ ] Description des services AWS
+* [x] Titre du cours
+* [x] Description architecture
+* [x] Description du pipeline
+* [x] Description des services AWS
 
 Déploiement :
 
-* [ ] Upload vers bucket documentation
-* [ ] Validation Access Denied sur URL S3
-* [ ] Validation accès via CloudFront
+* [x] Upload vers bucket documentation
+* [x] Validation Access Denied sur URL S3
+* [x] Validation accès via CloudFront (https://d3l8f210waz845.cloudfront.net)
 
 ---
 
-# Phase 6 - Validation Fonctionnelle
+# Phase 6 - Validation Fonctionnelle ✅
 
 Tester un payload valide :
 
-* [ ] Exécution réussie
-* [ ] Fichier créé dans S3
-* [ ] Ligne créée dans DynamoDB
+* [x] Exécution réussie (HTTP 201)
+* [x] Fichier créé dans S3 (raw-zone/year=2026/month=06/day=10/)
+* [x] Ligne créée dans DynamoDB (avg_temp=31.1, error_count=2)
 
 Tester un payload invalide :
 
-* [ ] Exception générée
-* [ ] Logs visibles dans CloudWatch
+* [x] Exception générée (HTTP 400)
+* [x] Logs visibles dans CloudWatch
 
 Captures :
 
-* [ ] Succès
-* [ ] Erreur
+* [x] 11-s3-raw-data-file.png
+* [x] 12-dynamodb-item.png
+* [x] 13-s3-direct-access-denied.png
+* [x] 14-cloudfront-doc-access-ok.png
+* [x] 15-cloudwatch-success.png
+* [x] 16-cloudwatch-error.png
 
 ---
 
@@ -226,11 +230,11 @@ Si une ressource est refusée :
 Le projet est terminé lorsque :
 
 * [x] Stack CREATE_COMPLETE
-* [ ] Lambda fonctionnelle
-* [ ] Upload S3 fonctionnel
-* [ ] DynamoDB alimentée
-* [ ] CloudFront accessible
-* [ ] Documentation accessible
-* [ ] Captures réalisées
+* [x] Lambda fonctionnelle
+* [x] Upload S3 fonctionnel
+* [x] DynamoDB alimentée
+* [x] CloudFront accessible
+* [x] Documentation accessible
+* [x] Captures réalisées
 * [ ] Rapport PDF terminé
 * [ ] ZIP prêt pour Google Classroom
