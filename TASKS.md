@@ -6,52 +6,65 @@ Réaliser et déployer un pipeline IoT serverless AWS conforme au sujet d'examen
 
 ---
 
-# Phase 1 - Analyse
+# Phase 1 - Analyse ✅
 
-* [ ] Lire complètement le sujet.
-* [ ] Identifier toutes les ressources AWS requises.
-* [ ] Vérifier la compatibilité avec AWS Academy Learner Lab.
-* [ ] Lister les permissions AWS éventuellement bloquantes.
+* [x] Lire complètement le sujet.
+* [x] Identifier toutes les ressources AWS requises.
+* [x] Vérifier la compatibilité avec AWS Academy Learner Lab.
+* [x] Lister les permissions AWS éventuellement bloquantes.
 
 Livrable :
 
-* Architecture validée.
+* Architecture validée. ✅
 
 ---
 
-# Phase 2 - Infrastructure CloudFormation
+# Phase 2 - Infrastructure CloudFormation ✅
 
 Créer le fichier :
 
-* [ ] template.yaml
+* [x] template.yaml (SAM)
 
-Ressources minimales :
+Ressources créées :
 
-* [ ] S3 Data Lake
-* [ ] DynamoDB
-* [ ] IAM Role Lambda
-* [ ] Lambda Function
-* [ ] API Gateway HTTP API
-* [ ] Lambda Permission
-* [ ] CloudFront Ingestion
+* [x] S3 Data Lake
+* [x] DynamoDB
+* [x] IAM Role Lambda
+* [x] Lambda Function (AWS::Serverless::Function)
+* [x] API Gateway HTTP API (AWS::Serverless::HttpApi)
+* [x] Lambda Permission (géré automatiquement par SAM)
+* [x] CloudFront Ingestion
 
 Documentation :
 
-* [ ] Bucket S3 Documentation
-* [ ] CloudFront Documentation
-* [ ] OAC si autorisé
-* [ ] Alternative documentée si OAC refusé
+* [x] Bucket S3 Documentation
+* [x] CloudFront Documentation
+* [x] OAC configuré et déployé
 
 Outputs :
 
-* [ ] CloudFrontIngestionURL
-* [ ] CloudFrontDocURL
-* [ ] S3BucketName
-* [ ] DynamoDBTableName
+* [x] CloudFrontIngestionURL
+* [x] CloudFrontDocURL
+* [x] S3BucketName
+* [x] DynamoDBTableName
 
 Validation :
 
-* [ ] Stack CREATE_COMPLETE
+* [x] Stack CREATE_COMPLETE (eu-west-3, fgbossou-iot-stack)
+
+Captures :
+
+* [x] 01-cloudformation-stack-create-complete.png
+* [x] 02-cloudformation-outputs.png
+* [x] 03-s3-buckets-list.png
+* [x] 04-s3-tech-doc-block-public-access.png
+* [x] 05-dynamodb-table.png
+* [x] 06a-lambda-function-overview.png
+* [x] 06b-lambda-env-vars.png
+* [x] 07-apigateway-routes.png
+* [x] 08-cloudfront-distributions-list.png
+* [x] 09-cloudfront-doc-origin-oac.png
+* [x] 10-iam-lambda-role.png
 
 ---
 
@@ -212,7 +225,7 @@ Si une ressource est refusée :
 
 Le projet est terminé lorsque :
 
-* [ ] Stack CREATE_COMPLETE
+* [x] Stack CREATE_COMPLETE
 * [ ] Lambda fonctionnelle
 * [ ] Upload S3 fonctionnel
 * [ ] DynamoDB alimentée
