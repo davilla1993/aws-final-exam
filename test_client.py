@@ -2,7 +2,7 @@ import requests
 import json
 
 # Remplacer par la valeur CloudFrontIngestionURL dans les Outputs CloudFormation
-CLOUDFRONT_INGESTION_URL = "https://dgggjjmfk7k84.cloudfront.net"
+CLOUDFRONT_INGESTION_URL = "https://VOTRE_CLOUDFRONT_URL.cloudfront.net"
 
 HEADERS = {"Content-Type": "application/json"}
 

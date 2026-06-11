@@ -165,18 +165,18 @@ Captures :
 
 ---
 
-# Phase 7 - Réponses Théoriques
+# Phase 7 - Réponses Théoriques ✅
 
 Préparer les réponses :
 
-* [ ] Question 1
-* [ ] Question 2
-* [ ] Question 3
-* [ ] Question 4
-* [ ] Question 5
-* [ ] Question 6
-* [ ] Question 7
-* [ ] Question 8
+* [x] Question 1
+* [x] Question 2
+* [x] Question 3
+* [x] Question 4
+* [x] Question 5
+* [x] Question 6
+* [x] Question 7
+* [x] Question 8
 
 Objectif :
 
@@ -186,23 +186,57 @@ Objectif :
 
 ---
 
-# Phase 8 - Rapport Final
+# Phase 8 - Rapport Final ✅
 
 Créer :
 
-* [ ] rapport.pdf
+* [x] rapport.html → rapport.pdf
 
 Inclure :
 
-* [ ] Introduction
-* [ ] Architecture
-* [ ] Réponses théoriques
-* [ ] Captures CloudFormation
-* [ ] Captures S3
-* [ ] Captures DynamoDB
-* [ ] Captures CloudWatch succès
-* [ ] Captures CloudWatch erreur
-* [ ] Conclusion
+* [x] Introduction
+* [x] Architecture
+* [x] Réponses théoriques (8 questions)
+* [x] Captures CloudFormation (Captures 1 et 2)
+* [x] Captures S3 (Captures 11, 12, 13)
+* [x] Captures DynamoDB (Captures 14 et 15)
+* [x] Captures CloudWatch succès (Capture 16)
+* [x] Captures CloudWatch erreur (Capture 17)
+* [x] Conclusion
+
+Bonus :
+
+* [x] README.md (guide complet pour correcteur novice)
+
+---
+
+# Phase 9 - Livraison Finale ← EN COURS
+
+## 9.1 Ressources AWS
+
+* [x] Stack fgbossou-iot-stack supprimée
+* [x] Bucket data-lake vidé et supprimé
+* [x] Bucket tech-doc vidé et supprimé
+
+## 9.2 Préparation du ZIP
+
+* [ ] Copier template.yaml depuis infrastructure/ à la racine du ZIP
+* [ ] Inclure index.py
+* [ ] Inclure test_client.py
+* [ ] Inclure index.html
+* [ ] Inclure rapport.pdf
+* [ ] Créer fgbossou-iot-pipeline.zip avec ces 5 fichiers uniquement
+
+## 9.3 Vérification avant soumission
+
+* [ ] Ouvrir le ZIP et vérifier les 5 fichiers présents
+* [ ] Vérifier que test_client.py contient la bonne URL CloudFront
+* [ ] Vérifier que rapport.pdf s'ouvre correctement
+* [ ] Relire rapidement le README.md
+
+## 9.4 Soumission
+
+* [ ] Déposer fgbossou-iot-pipeline.zip sur Google Classroom
 
 ---
 
@@ -236,5 +270,5 @@ Le projet est terminé lorsque :
 * [x] CloudFront accessible
 * [x] Documentation accessible
 * [x] Captures réalisées
-* [ ] Rapport PDF terminé
+* [x] Rapport PDF terminé
 * [ ] ZIP prêt pour Google Classroom

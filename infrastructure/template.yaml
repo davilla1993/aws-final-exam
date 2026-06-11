@@ -34,8 +34,14 @@ Resources:
   # ============================================================
   DataLakeBucket:
     Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
     Properties:
       BucketName: !Sub "${AWS::AccountId}-${ProjectName}-data-lake"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
 
   # ============================================================
   # [2] DYNAMODB — Feature Store analytique (métriques agrégées)
@@ -86,8 +92,8 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource:
-                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
-                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*:*"
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-ingestion"
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-ingestion:*"
 
   # ============================================================
   # [4] SAM HTTP API — SAM crée automatiquement le Stage $default
@@ -227,7 +233,16 @@ Resources:
             }
 
   # ============================================================
-  # [6] CLOUDFRONT INGESTION — CDN devant API Gateway
+  # [6] CLOUDWATCH — Log Group explicite avec rétention 7 jours
+  # ============================================================
+  IoTFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-ingestion"
+      RetentionInDays: 7
+
+  # ============================================================
+  # [6b] CLOUDFRONT INGESTION — CDN devant API Gateway
   #     CachingDisabled      : POST IoT jamais mis en cache
   #     AllViewerExceptHostHeader : transmet tous les headers sauf Host
   # ============================================================
@@ -247,8 +262,8 @@ Resources:
         DefaultCacheBehavior:
           TargetOriginId: ApiGatewayOrigin
           ViewerProtocolPolicy: redirect-to-https
-          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
-          OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad       # AWS Managed: CachingDisabled (POST ne doit jamais être mis en cache)
+          OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # AWS Managed: AllViewerExceptHostHeader (transmet tous les headers sauf Host)
           AllowedMethods:
             - DELETE
             - GET
