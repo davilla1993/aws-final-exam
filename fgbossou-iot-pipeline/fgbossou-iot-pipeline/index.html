@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation Technique – Pipeline IoT AWS</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6f9;
+      color: #2d3748;
+      line-height: 1.7;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a365d, #2b6cb0);
+      color: white;
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    header h1 { font-size: 2rem; margin-bottom: 8px; }
+    header p  { font-size: 1.1rem; opacity: 0.85; }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+
+    main { max-width: 960px; margin: 40px auto; padding: 0 24px 60px; }
+
+    section { background: white; border-radius: 8px; padding: 32px; margin-bottom: 28px;
+              box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+    h2 { font-size: 1.3rem; color: #1a365d; border-left: 4px solid #2b6cb0;
+         padding-left: 12px; margin-bottom: 20px; }
+
+    h3 { font-size: 1rem; color: #2b6cb0; margin: 20px 0 8px; }
+
+    p  { margin-bottom: 12px; }
+
+    .arch-diagram {
+      background: #1a202c;
+      color: #68d391;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      padding: 24px;
+      border-radius: 6px;
+      line-height: 1.9;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .service-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 16px;
+    }
+
+    .service-card .icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .service-card h3   { margin: 0 0 6px; font-size: 0.95rem; }
+    .service-card p    { font-size: 0.88rem; color: #4a5568; margin: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 12px;
+    }
+
+    th { background: #ebf4ff; color: #1a365d; text-align: left;
+         padding: 10px 14px; border-bottom: 2px solid #bee3f8; }
+    td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; }
+    tr:last-child td { border-bottom: none; }
+
+    code {
+      background: #edf2f7;
+      color: #c53030;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .code-block {
+      background: #1a202c;
+      color: #e2e8f0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      padding: 20px;
+      border-radius: 6px;
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #ebf4ff;
+      color: #2b6cb0;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      margin-right: 4px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #718096;
+      padding: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Pipeline d'Ingestion de Données IoT en Temps Réel</h1>
+  <p>Documentation Technique – Examen Final</p>
+  <div class="badge">Master 1 IA &amp; Big Data &nbsp;|&nbsp; Examen Final AWS &nbsp;|&nbsp; GBOSSOU Folly S. Carlo</div>
+</header>
+
+<main>
+
+  <!-- SECTION 1 : CONTEXTE -->
+  <section>
+    <h2>Contexte du Projet</h2>
+    <p>
+      Ce projet a été réalisé dans le cadre du cours <strong>Introduction à AWS</strong>.
+      L'objectif est de concevoir et déployer une architecture serverless sur AWS capable
+      d'ingérer en temps réel les flux de données envoyés par des capteurs IoT industriels
+      via des requêtes HTTP POST.
+    </p>
+    <p>
+      En parallèle, un site de documentation technique (cette page) est hébergé dans un
+      bucket S3 privé, rendu accessible de manière sécurisée via Amazon CloudFront et
+      le mécanisme <strong>OAC (Origin Access Control)</strong>.
+    </p>
+    <p>
+      L'intégralité de l'infrastructure est automatisée avec
+      <strong>AWS SAM (Serverless Application Model)</strong> — aucune ressource n'est
+      créée manuellement.
+    </p>
+    <p><span class="tag">Étudiant</span> Carlo GBOSSOU &nbsp;|&nbsp;
+       <span class="tag">Identifiant</span> fgbossou &nbsp;|&nbsp;
+       <span class="tag">Région</span> eu-west-3 (Paris)</p>
+  </section>
+
+  <!-- SECTION 2 : ARCHITECTURE -->
+  <section>
+    <h2>Architecture Globale</h2>
+    <p>La solution repose sur deux sous-systèmes indépendants :</p>
+
+    <h3>Sous-système 1 — Pipeline d'Ingestion IoT</h3>
+    <div class="arch-diagram">
+Client IoT / test_client.py<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  HTTP POST<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+Amazon CloudFront (Distribution Ingestion)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  HTTPS – CachingDisabled<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+Amazon API Gateway HTTP API<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  Route POST /<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+AWS Lambda Python 3.11 (index.handler)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──▶ Amazon S3 Data Lake<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raw-zone/year=YYYY/month=MM/day=DD/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──▶ Amazon DynamoDB (Feature Store)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request_id | timestamp | s3_path | avg_temp | error_count
+    </div>
+
+    <h3>Sous-système 2 — Documentation Technique</h3>
+    <div class="arch-diagram">
+Navigateur<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  HTTPS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+Amazon CloudFront (Distribution Documentation)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  OAC SigV4 – CachingOptimized<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+Amazon S3 (Bucket privé – accès public bloqué)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── index.html (cette page)
+    </div>
+  </section>
+
+  <!-- SECTION 3 : SERVICES AWS -->
+  <section>
+    <h2>Services AWS Utilisés</h2>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="icon">☁️</div>
+        <h3>AWS SAM / CloudFormation</h3>
+        <p>Infrastructure as Code. Déploiement automatisé de l'ensemble des ressources via <code>sam deploy</code>.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="icon">⚡</div>
+        <h3>AWS Lambda</h3>
+        <p>Fonction serverless Python 3.11. Traitement à la volée des données IoT sans serveur à gérer.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="icon">🔗</div>
+        <h3>Amazon API Gateway</h3>
+        <p>HTTP API (v2). Point d'entrée REST exposant la route <code>POST /</code> vers Lambda.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="icon">🌐</div>
+        <h3>Amazon CloudFront</h3>
+        <p>CDN mondial. Deux distributions : une devant API Gateway (ingestion), une devant S3 (documentation).</p>
+      </div>
+
+      <div class="service-card">
+        <div class="icon">🗄️</div>
+        <h3>Amazon S3</h3>
+        <p>Data Lake brut (partitionnement temporel) et hébergement sécurisé de la documentation.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="icon">📊</div>
+        <h3>Amazon DynamoDB</h3>
+        <p>Feature Store analytique. Stockage des métriques agrégées en mode PAY_PER_REQUEST.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="icon">🔐</div>
+        <h3>AWS IAM</h3>
+        <p>Rôle Lambda avec permissions minimales : <code>s3:PutObject</code>, <code>dynamodb:PutItem</code>, logs CloudWatch.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="icon">📋</div>
+        <h3>Amazon CloudWatch</h3>
+        <p>Supervision et débogage. Logs structurés de chaque exécution Lambda (succès et erreurs).</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 4 : PIPELINE DÉTAILLÉ -->
+  <section>
+    <h2>Fonctionnement du Pipeline</h2>
+    <table>
+      <thead>
+        <tr><th>Étape</th><th>Action</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Client envoie un <code>POST</code> vers CloudFront</td><td>Requête HTTPS sécurisée</td></tr>
+        <tr><td>2</td><td>CloudFront transmet à API Gateway</td><td>Cache désactivé (POST)</td></tr>
+        <tr><td>3</td><td>API Gateway invoque Lambda</td><td>Payload JSON transmis</td></tr>
+        <tr><td>4</td><td>Lambda valide le payload</td><td><code>400</code> si invalide</td></tr>
+        <tr><td>5</td><td>Lambda calcule les métriques</td><td>avg_temperature, error_count</td></tr>
+        <tr><td>6</td><td>Lambda écrit dans S3</td><td>Fichier JSON partitionné</td></tr>
+        <tr><td>7</td><td>Lambda écrit dans DynamoDB</td><td>Ligne avec request_id unique</td></tr>
+        <tr><td>8</td><td>Lambda retourne la réponse</td><td><code>201 Created</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 5 : DÉPLOIEMENT -->
+  <section>
+    <h2>Commandes de Déploiement</h2>
+
+    <h3>Déploiement de l'infrastructure</h3>
+    <div class="code-block">
+sam deploy \<br>
+&nbsp;&nbsp;--template-file infrastructure/template.yaml \<br>
+&nbsp;&nbsp;--stack-name fgbossou-iot-stack \<br>
+&nbsp;&nbsp;--capabilities CAPABILITY_NAMED_IAM \<br>
+&nbsp;&nbsp;--resolve-s3 \<br>
+&nbsp;&nbsp;--region eu-west-3
+    </div>
+
+    <h3>Upload de la documentation vers S3</h3>
+    <div class="code-block">
+aws s3 cp index.html \<br>
+&nbsp;&nbsp;s3://629193321657-fgbossou-iot-pipeline-tech-doc/index.html \<br>
+&nbsp;&nbsp;--region eu-west-3
+    </div>
+
+    <h3>Format du payload IoT attendu</h3>
+    <div class="code-block">
+{<br>
+&nbsp;&nbsp;"measurements": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ "sensor_id": "sensor-1", "temperature": 22.5, "status": "OK" },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ "sensor_id": "sensor-2", "temperature": 37.8, "status": "ERROR" }<br>
+&nbsp;&nbsp;]<br>
+}
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Master 1 IA &amp; Big Data – Examen Final AWS – GBOSSOU Folly S. Carlo
+</footer>
+
+</body>
+</html>

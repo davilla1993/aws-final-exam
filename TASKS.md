@@ -220,42 +220,23 @@ Bonus :
 
 ## 9.2 Préparation du ZIP
 
-* [ ] Copier template.yaml depuis infrastructure/ à la racine du ZIP
-* [ ] Inclure index.py
-* [ ] Inclure test_client.py
-* [ ] Inclure index.html
-* [ ] Inclure rapport.pdf
-* [ ] Créer fgbossou-iot-pipeline.zip avec ces 5 fichiers uniquement
+* [x] Copier template.yaml depuis infrastructure/ à la racine du ZIP
+* [x] Inclure index.py
+* [x] Inclure test_client.py
+* [x] Inclure index.html
+* [x] Inclure rapport.pdf
+* [x] Créer fgbossou-iot-pipeline.zip avec ces 5 fichiers uniquement
 
 ## 9.3 Vérification avant soumission
 
-* [ ] Ouvrir le ZIP et vérifier les 5 fichiers présents
-* [ ] Vérifier que test_client.py contient la bonne URL CloudFront
-* [ ] Vérifier que rapport.pdf s'ouvre correctement
-* [ ] Relire rapidement le README.md
+* [x] Ouvrir le ZIP et vérifier les 5 fichiers présents
+* [x] Vérifier que test_client.py contient la bonne URL CloudFront
+* [x] Vérifier que rapport.pdf s'ouvre correctement
+* [x] Relire rapidement le README.md
 
 ## 9.4 Soumission
 
-* [ ] Déposer fgbossou-iot-pipeline.zip sur Google Classroom
-
----
-
-# Contraintes AWS Academy Learner Lab
-
-Toujours vérifier :
-
-* Permissions IAM disponibles
-* Création CloudFront autorisée
-* Création OAC autorisée
-* Création API Gateway autorisée
-* Création Lambda autorisée
-
-Si une ressource est refusée :
-
-1. Identifier la permission manquante.
-2. Documenter le problème.
-3. Proposer une alternative compatible.
-4. Ne jamais bloquer l'avancement du projet.
+* [x] Déposer fgbossou-iot-pipeline.zip sur Google Classroom
 
 ---
 
@@ -271,4 +252,4 @@ Le projet est terminé lorsque :
 * [x] Documentation accessible
 * [x] Captures réalisées
 * [x] Rapport PDF terminé
-* [ ] ZIP prêt pour Google Classroom
+* [x] ZIP prêt pour Google Classroom
